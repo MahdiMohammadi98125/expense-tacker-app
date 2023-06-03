@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+// screen
+import './screens/category_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -9,8 +11,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      debugShowCheckedModeBanner: false,
+    return MaterialApp(
+      initialRoute: CategoryScreen.name,
+      routes: {
+        CategoryScreen.name: (_) => const CategoryScreen(),
+      },
     );
   }
 }
