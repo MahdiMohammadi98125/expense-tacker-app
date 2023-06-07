@@ -1,9 +1,10 @@
+import 'package:flutter/material.dart';
 import '../constants/icons.dart';
 import './ex_category.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
-class DatabaseProvider {
+class DatabaseProvider with ChangeNotifier {
   // in-app memory for holding the Expense categories temporarily
   List<ExpenseCategory> _categories = [];
   List<ExpenseCategory> get categories => _categories;
