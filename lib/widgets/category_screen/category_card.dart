@@ -22,7 +22,7 @@ class CategoryCard extends StatelessWidget {
       ),
       title: Text(category.title),
       subtitle: Text('entries: ${category.entries}'),
-      trailing: Text(NumberFormat.currency(locale: 'en_IN', symbol: '₹')
+      trailing: Text(NumberFormat.currency(locale: 'Afg', symbol: 'Af ')
           .format(category.totalAmount)),
     );
   }
