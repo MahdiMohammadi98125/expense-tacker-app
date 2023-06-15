@@ -1,13 +1,19 @@
+// ignore_for_file: unused_field
+
 import 'package:flutter/material.dart';
-import '../constants/icons.dart';
-import './ex_category.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
+import '../constants/icons.dart';
+import './ex_category.dart';
+import './expense.dart';
 
 class DatabaseProvider with ChangeNotifier {
   // in-app memory for holding the Expense categories temporarily
   List<ExpenseCategory> _categories = [];
   List<ExpenseCategory> get categories => _categories;
+
+  List<Expense> _expenses = [];
+  List<Expense> get expenses => expenses;
 
   Database? _database;
   Future<Database> get database async {
@@ -76,4 +82,71 @@ class DatabaseProvider with ChangeNotifier {
       });
     });
   }
+}
+
+Future<void> updateCategory(
+  String category,
+  int nEntries,
+  double nTotalAmount,
+) async {
+  final db = await database;
+  await db.transaction((txn) async {
+    await txn
+        .update(
+      cTable, // category table
+      {
+        'entries': nEntries, // new value of 'entries'
+        'totalAmount': nTotalAmount.toString(), // new value of 'totalAmount'
+      },
+      where: 'title == ?', // in table where the title ==
+      whereArgs: [category], // this category.
+    )
+        .then((_) {
+      // after updating in database. update it in our in-app memory too.
+      var file = _categories.firstWhere((element) => element.title == category);
+      file.entries = nEntries;
+      file.totalAmount = nTotalAmount;
+      notifyListeners();
+    });
+  });
+}
+
+// method to add an expense to database
+
+Future<void> addExpense(Expense exp) async {
+  final db = await Database;
+  await db.transaction((txn) async {
+    await txn
+        .insert(
+      eTable,
+      exp.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    )
+        .then((generatedId) {
+      // after inserting in a database. we store it in in-app memory with new expense with generated id
+      final file = Expense(
+          id: generatedId,
+          title: exp.title,
+          amount: exp.amount,
+          date: exp.date,
+          category: exp.category);
+      // add it to '_expenses'
+
+      _expenses.add(file);
+      // notify the listeners about the change in value of '_expenses'
+      notifyListeners();
+      // after we inserted the expense, we need to update the 'entries' and 'totalAmount' of the related 'category'
+      var data = calculateEntriesAndAmount(exp.category);
+      updateCategory(exp.category, data['entries'], data['totalAmount']);
+    });
+  });
+}
+
+Map<String, dynamic> calculateEntriesAndAmount(String category) {
+  double total = 0.0;
+  var list = _expenses.where((element) => element.category == category);
+  for (final i in list) {
+    total += i.amount;
+  }
+  return {'entries': list.length, 'totalAmount': total};
 }
