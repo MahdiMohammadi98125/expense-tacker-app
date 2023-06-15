@@ -1,3 +1,4 @@
+import '../category_screen/category_card.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -14,17 +15,7 @@ class CategoryList extends StatelessWidget {
       // get the categories
       var list = db.categories;
       return ListView.builder(
-        itemCount: list.length,
-        itemBuilder: (_, i) => ListTile(
-          leading: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Icon(list[i].icon),
-          ),
-          title: Text(list[i].title),
-          subtitle: Text('entries: ${list[i].entries}'),
-          trailing: Text('${(list[i].totalAmount).toStringAsFixed(2)}'),
-        ),
-      );
+          itemCount: list.length, itemBuilder: (_, i) => CategoryCard(list[i]));
     });
   }
 }
