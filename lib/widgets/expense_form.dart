@@ -38,6 +38,7 @@ class _ExpenseFormState extends State<ExpenseForm> {
   Widget build(BuildContext context) {
     final provider = Provider.of<DatabaseProvider>(context, listen: false);
     return Container(
+      color: const Color(0xFF0A0E21),
       height: MediaQuery.of(context).size.height * 0.7,
       padding: const EdgeInsets.all(20.0),
       child: SingleChildScrollView(

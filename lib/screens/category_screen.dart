@@ -13,6 +13,7 @@ class CategoryScreen extends StatelessWidget {
       ),
       body: const CategoryFetcher(),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.lightBlue,
         onPressed: () {
           showModalBottomSheet(
             context: context,
