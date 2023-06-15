@@ -1,34 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../../models/database_provider.dart';
-import 'expense_list.dart';
+import './all_expenses_list.dart';
+import './expense_search.dart';
 
-class ExpenseFetcher extends StatefulWidget {
-  final String category;
-  const ExpenseFetcher(this.category, {super.key});
+class AllExpensesFetcher extends StatefulWidget {
+  const AllExpensesFetcher({super.key});
 
   @override
-  State<ExpenseFetcher> createState() => _ExpenseFetcherState();
+  State<AllExpensesFetcher> createState() => _AllExpensesFetcherState();
 }
 
-class _ExpenseFetcherState extends State<ExpenseFetcher> {
-  late Future _expenseList;
-  Future _getExpenseList() async {
+class _AllExpensesFetcherState extends State<AllExpensesFetcher> {
+  late Future _allExpensesList;
+
+  Future _getAllExpenses() async {
     final provider = Provider.of<DatabaseProvider>(context, listen: false);
-    return await provider.fetchExpenses(widget.category);
+    return await provider.fetchAllExpenses();
   }
 
   @override
   void initState() {
     super.initState();
-    _expenseList = _getExpenseList();
+    _allExpensesList = _getAllExpenses();
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: _expenseList,
+      future: _allExpensesList,
       builder: (_, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           if (snapshot.hasError) {
@@ -37,11 +37,9 @@ class _ExpenseFetcherState extends State<ExpenseFetcher> {
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
               child: Column(
-                children: [
-                  SizedBox(
-                    height: 250.0,
-                  ),
-                  const Expanded(child: ExpenseList()),
+                children: const [
+                  ExpenseSearch(),
+                  Expanded(child: AllExpensesList()),
                 ],
               ),
             );
