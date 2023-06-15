@@ -136,10 +136,15 @@ Future<void> addExpense(Expense exp) async {
       // notify the listeners about the change in value of '_expenses'
       notifyListeners();
       // after we inserted the expense, we need to update the 'entries' and 'totalAmount' of the related 'category'
-      var data = calculateEntriesAndAmount(exp.category);
-      updateCategory(exp.category, data['entries'], data['totalAmount']);
+      var ex = findCategory(exp.category);
+
+      updateCategory(exp.category, ex.entries + 1, ex.totalAmount + exp.amount);
     });
   });
+}
+
+ExpenseCategory findCategory(String title) {
+  return _categories.firstWhere((element) => element.title == title);
 }
 
 Map<String, dynamic> calculateEntriesAndAmount(String category) {
