@@ -1,10 +1,9 @@
-// ignore_for_file: non_constant_identifier_names, unused_local_variable, unnecessary_string_interpolations
-
-import 'package:expense_tracker_app/models/database_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../models/database_provider.dart';
+import './total_chart.dart';
 import './category_list.dart';
+import '../../screens/all_expenses.dart';
 
 class CategoryFetcher extends StatefulWidget {
   const CategoryFetcher({super.key});
@@ -24,7 +23,7 @@ class _CategoryFetcherState extends State<CategoryFetcher> {
   @override
   void initState() {
     super.initState();
-    // fetch the list and set it to category list
+    // fetch the list and set it to _categoryList
     _categoryList = _getCategoryList();
   }
 
@@ -38,7 +37,35 @@ class _CategoryFetcherState extends State<CategoryFetcher> {
           if (snapshot.hasError) {
             return Center(child: Text(snapshot.error.toString()));
           } else {
-            return const CategoryList();
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: Column(
+                children: [
+                  const SizedBox(
+                    height: 250.0,
+                    child: TotalChart(),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'Expenses',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pushNamed(AllExpenses.name);
+                        },
+                        child: const Text('View All'),
+                      ),
+                    ],
+                  ),
+                  const Expanded(child: CategoryList()),
+                ],
+              ),
+            );
           }
         } else {
           return const Center(child: CircularProgressIndicator());

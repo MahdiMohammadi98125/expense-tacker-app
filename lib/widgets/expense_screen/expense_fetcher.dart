@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../models/database_provider.dart';
-import 'expense_list.dart';
+import './expense_list.dart';
+import './expense_chart.dart';
 
 class ExpenseFetcher extends StatefulWidget {
   final String category;
@@ -40,6 +41,7 @@ class _ExpenseFetcherState extends State<ExpenseFetcher> {
                 children: [
                   SizedBox(
                     height: 250.0,
+                    child: ExpenseChart(widget.category),
                   ),
                   const Expanded(child: ExpenseList()),
                 ],
